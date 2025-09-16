@@ -1,0 +1,25 @@
+{
+  "name": "ai-code-assistant-demo",
+  "version": "1.0.0",
+  "description": "AI代码助手演示项目",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd ai-code-helper-client && npm start",
+    "dev:server": "cd ai-code-helper-server && npm run server",
+    "build": "cd ai-code-helper-client && npm run build",
+    "install:all": "npm install && cd ai-code-helper-client && npm install && cd ../ai-code-helper-server && npm install",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "ai",
+    "code-assistant",
+    "react",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

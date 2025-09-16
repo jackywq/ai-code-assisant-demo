@@ -47,6 +47,7 @@ ai-code/
 
 ### 安装依赖
 
+#### 方法一：分别安装（传统方式）
 1. 安装前端依赖：
 ```bash
 cd ai-code-helper-client
@@ -59,8 +60,16 @@ cd ../ai-code-helper-server
 npm install
 ```
 
+#### 方法二：一键安装（推荐）
+使用根目录的package.json可以一键安装所有依赖：
+```bash
+# 在项目根目录执行
+npm run install:all
+```
+
 ### 运行开发服务器
 
+#### 方法一：分别启动
 1. 启动后端服务器：
 ```bash
 cd ai-code-helper-server
@@ -73,7 +82,22 @@ cd ../ai-code-helper-client
 npm run start
 ```
 
+#### 方法二：同时启动（推荐）
+使用根目录的package.json可以同时启动前后端：
+```bash
+# 在项目根目录执行
+npm run dev
+# 或
+npm start
+```
+
 3. 打开浏览器访问：http://localhost:5173
+
+### 单独启动项目
+```bash
+npm run dev:client  # 仅启动前端
+npm run dev:server  # 仅启动后端
+```
 
 ## 环境配置
 
