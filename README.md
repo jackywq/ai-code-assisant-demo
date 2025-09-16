@@ -70,7 +70,7 @@ npm run server
 2. 启动前端开发服务器：
 ```bash
 cd ../ai-code-helper-client
-npm run dev
+npm run start
 ```
 
 3. 打开浏览器访问：http://localhost:5173
