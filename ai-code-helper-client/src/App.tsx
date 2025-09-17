@@ -1,20 +1,24 @@
 import { useState, useRef, useEffect } from "react";
-// 移除 axios 导入
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
+interface CodeResult {
+  language: string;
+  code: string;
+}
+
 function App() {
-  const [prompt, setPrompt] = useState("写一个 Vue3 组合式 API 的节流 Hook");
-  const [fullCode, setFullCode] = useState("");
-  const [streamingCode, setStreamingCode] = useState("");
-  const [language, setLanguage] = useState("javascript");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const controllerRef = useRef(null);
-  const readerRef = useRef(null); // 使用 readerRef 替代 streamRef
+  const [prompt, setPrompt] = useState<string>("写一个 Vue3 组合式 API 的节流 Hook");
+  const [fullCode, setFullCode] = useState<string>("");
+  const [streamingCode, setStreamingCode] = useState<string>("");
+  const [language, setLanguage] = useState<string>("javascript");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const controllerRef = useRef<AbortController | null>(null);
+  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
 
   // 处理AI返回的代码块标记（提取语言和纯代码）
-  const processCode = (rawCode) => {
+  const processCode = (rawCode: string): CodeResult => {
     const codeBlockRegex = /```(\w+)?\s*([\s\S]*?)\s*```/;
     const match = rawCode.match(codeBlockRegex);
     if (match) {
@@ -27,7 +31,7 @@ function App() {
   };
 
   // 流式请求AI接口（使用 fetch）
-  const fetchAICodeStream = async () => {
+  const fetchAICodeStream = async (): Promise<void> => {
     // 重置状态
     setLoading(true);
     setError("");
@@ -60,7 +64,7 @@ function App() {
       const decoder = new TextDecoder("utf-8");
 
       // 读取流数据
-      const readStream = async () => {
+      const readStream = async (): Promise<void> => {
         try {
           const { done, value } = await reader.read();
 
@@ -104,7 +108,7 @@ function App() {
           await readStream();
         } catch (err) {
           console.error("流数据处理错误:", err);
-          if (!controllerRef.current.signal.aborted) {
+          if (!controllerRef.current?.signal.aborted) {
             setError("流处理错误，请重试");
           }
         }
@@ -113,8 +117,8 @@ function App() {
       // 开始读取流
       await readStream();
     } catch (err) {
-      if (!controllerRef.current.signal.aborted) {
-        setError(err.message || "请求失败，请重试");
+      if (!controllerRef.current?.signal.aborted) {
+        setError((err as Error).message || "请求失败，请重试");
       }
     } finally {
       setLoading(false);
@@ -122,7 +126,7 @@ function App() {
   };
 
   // 取消流式请求
-  const cancelStream = () => {
+  const cancelStream = (): void => {
     if (controllerRef.current) {
       controllerRef.current.abort();
     }
@@ -140,7 +144,7 @@ function App() {
   }, []);
 
   // 下载代码为文件
-  const downloadCode = () => {
+  const downloadCode = (): void => {
     if (!fullCode) {
       setError("没有可下载的代码");
       return;

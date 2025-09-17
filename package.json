@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "dev:client": "cd ai-code-helper-client && npm start",
+    "dev:client": "cd ai-code-helper-client && npm run dev",
     "dev:server": "cd ai-code-helper-server && npm run server",
     "build": "cd ai-code-helper-client && npm run build",
     "install:all": "npm install && cd ai-code-helper-client && npm install && cd ../ai-code-helper-server && npm install",

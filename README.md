@@ -1,20 +1,23 @@
 # AI Code Helper
 
-一个全栈AI代码助手项目，包含React前端和Node.js后端服务器。
+一个全栈AI代码助手项目，包含React + TypeScript前端和Node.js后端服务器。
 
 ## 项目结构
 
 ```
 ai-code/
-├── ai-code-helper-client/     # React前端应用
-│   ├── src/                   # 源代码目录
+├── ai-code-helper-client/     # React + TypeScript前端应用
+│   ├── src/                   # 源代码目录 (TypeScript + LESS)
 │   ├── public/               # 静态资源
 │   ├── package.json          # 前端依赖配置
-│   └── vite.config.js        # Vite配置
+│   ├── tsconfig.json        # TypeScript配置
+│   ├── tsconfig.node.json   # Node.js TypeScript配置
+│   └── vite.config.ts        # Vite配置 (TypeScript版本)
 ├── ai-code-helper-server/     # Node.js后端服务器
 │   ├── server.js             # 服务器主文件
 │   ├── package.json          # 后端依赖配置
 │   └── .env                  # 环境变量配置
+├── package.json              # 根目录配置 (同时启动前后端)
 └── README.md                 # 项目说明文档
 ```
 
@@ -25,13 +28,17 @@ ai-code/
 - 🔄 实时代码提示和建议
 - 🌐 RESTful API接口
 - 🎨 现代化的用户界面
+- 🛡️ 完整的TypeScript类型安全
+- 💅 LESS预处理器支持
 
 ## 技术栈
 
 ### 前端
-- React 18
+- React 18 + TypeScript
 - Vite (构建工具)
 - ESLint (代码检查)
+- LESS (CSS预处理器)
+- TypeScript (类型安全)
 
 ### 后端
 - Node.js
@@ -123,6 +130,35 @@ npm run build
 ```bash
 cd ai-code-helper-server
 npm start
+```
+
+## TypeScript 开发
+
+### 类型检查
+项目使用TypeScript进行完整的类型检查：
+
+```bash
+# 运行类型检查
+cd ai-code-helper-client
+npm run type-check
+```
+
+### 开发脚本
+- `npm run dev` - 启动开发服务器（支持热重载）
+- `npm run type-check` - 运行TypeScript类型检查
+- `npm run build` - 构建生产版本（包含类型检查）
+
+### LESS 特性
+项目使用LESS预处理器，支持：
+- 变量定义和使用
+- 嵌套规则
+- 混合（Mixins）
+- 运算和函数
+
+### 路径别名
+配置了路径别名，可以使用 `@/` 导入src目录下的文件：
+```typescript
+import App from '@/App'  // 相当于 import App from './App'
 ```
 
 ## 开发指南
