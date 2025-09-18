@@ -1,33 +1,42 @@
 import { useState, useRef, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-
-interface CodeResult {
-  language: string;
-  code: string;
-}
+import ReactMarkdown from "react-markdown";
+import { Code } from "react-markdown/lib/ast-to-react";
 
 function App() {
-  const [prompt, setPrompt] = useState<string>("写一个 Vue3 组合式 API 的节流 Hook");
+  const [prompt, setPrompt] = useState<string>(
+    "写一个 Vue3 组合式 API 的节流 Hook"
+  );
   const [fullCode, setFullCode] = useState<string>("");
   const [streamingCode, setStreamingCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const controllerRef = useRef<AbortController | null>(null);
-  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
+  const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(
+    null
+  );
 
-  // 处理AI返回的代码块标记（提取语言和纯代码）
-  const processCode = (rawCode: string): CodeResult => {
-    const codeBlockRegex = /```(\w+)?\s*([\s\S]*?)\s*```/;
-    const match = rawCode.match(codeBlockRegex);
-    if (match) {
-      return {
-        language: match[1] || "javascript",
-        code: match[2],
-      };
-    }
-    return { language: "javascript", code: rawCode };
+  // 自定义代码组件，用于在ReactMarkdown中高亮代码
+  const CodeBlock = (props: Code) => {
+    const { inline, className, children, ...rest } = props;
+    const match = /language-(\w+)/.exec(className || "");
+    return inline ? (
+      <code className={className} {...rest}>
+        {children}
+      </code>
+    ) : (
+      <SyntaxHighlighter
+        style={dracula}
+        language={match ? match[1] : "javascript"}
+        PreTag="div"
+        showLineNumbers={true}
+        {...rest}
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    );
   };
 
   // 流式请求AI接口（使用 fetch）
@@ -70,10 +79,9 @@ function App() {
 
           if (done) {
             // 流结束处理
-            const { language: lang, code } = processCode(accumulatedCode);
-            setLanguage(lang);
-            setFullCode(code);
-            setStreamingCode(code);
+            // 直接存储原始内容，由ReactMarkdown处理格式化
+            setFullCode(accumulatedCode);
+            setStreamingCode(accumulatedCode);
             return;
           }
 
@@ -257,17 +265,19 @@ function App() {
             style={{
               border: "1px solid #ddd",
               borderRadius: "4px",
+              padding: "20px",
+              backgroundColor: "#fff",
               overflow: "hidden",
+              fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
             }}
           >
-            <SyntaxHighlighter
-              style={dracula}
-              language={language}
-              PreTag="div"
-              showLineNumbers={true}
+            <ReactMarkdown
+              components={{
+                code: CodeBlock,
+              }}
             >
               {streamingCode || fullCode}
-            </SyntaxHighlighter>
+            </ReactMarkdown>
           </div>
         </div>
       )}
