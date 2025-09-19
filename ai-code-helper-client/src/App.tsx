@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
-import { Code } from "react-markdown/lib/ast-to-react";
 import "./App.less";
 function App() {
   const [prompt, setPrompt] = useState<string>(
@@ -19,7 +18,7 @@ function App() {
   );
 
   // 自定义代码组件，用于在ReactMarkdown中高亮代码
-  const CodeBlock = (props: Code) => {
+  const CodeBlock = (props: any) => {
     const { inline, className, children, ...rest } = props;
     const match = /language-(\w+)/.exec(className || "");
     return inline ? (
