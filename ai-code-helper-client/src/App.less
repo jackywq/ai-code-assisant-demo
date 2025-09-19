@@ -1,44 +1,300 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+// 变量定义
+@primary-color: #1890ff;
+@success-color: #52c41a;
+@warning-color: #faad14;
+@error-color: #ff4d4f;
+@text-color: #262626;
+@text-color-secondary: #8c8c8c;
+@border-color: #d9d9d9;
+@background-color: #f5f5f5;
+@card-background: #ffffff;
+@border-radius: 8px;
+@box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+// 全局样式
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: @background-color;
+  color: @text-color;
+}
+
+// 布局容器 - 全屏模式
+.app-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: auto;
+  
+  .app-content {
+    min-height: 100vh;
+    background: @card-background;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// 头部样式
+.app-header {
+  background: linear-gradient(90deg, @primary-color 0%, #52c41a 100%);
+  color: white;
+  padding: 40px;
   text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  flex-shrink: 0;
   
-  &:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+  h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
   }
   
-  &.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
+  .app-subtitle {
+    margin: 12px 0 0 0;
+    font-size: 1.3rem;
+    opacity: 0.95;
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+// 输入区域样式
+.input-section {
+  padding: 40px;
+  border-bottom: 1px solid @border-color;
+  flex-shrink: 0;
+  
+  .input-container {
+    margin-bottom: 32px;
+    
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 20px;
+      font-size: 18px;
+      border: 2px solid @border-color;
+      border-radius: @border-radius;
+      resize: vertical;
+      transition: all 0.3s ease;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      line-height: 1.6;
+      
+      &:focus {
+        outline: none;
+        border-color: @primary-color;
+        box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
+      }
+      
+      &::placeholder {
+        color: @text-color-secondary;
+        font-size: 16px;
+      }
+    }
   }
-  to {
-    transform: rotate(360deg);
+  
+  .button-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    
+    button {
+      padding: 16px 32px;
+      border: none;
+      border-radius: @border-radius;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 140px;
+      
+      &.generate-btn {
+        background: @primary-color;
+        color: white;
+        
+        &:hover:not(:disabled) {
+          background: darken(@primary-color, 15%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+        }
+        
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+      
+      &.cancel-btn {
+        background: @error-color;
+        color: white;
+        
+        &:hover {
+          background: darken(@error-color, 15%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
+        }
+      }
+      
+      &.download-btn {
+        background: @success-color;
+        color: white;
+        
+        &:hover {
+          background: darken(@success-color, 15%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+        }
+      }
+    }
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+// 错误提示样式
+.error-section {
+  padding: 0 40px 20px 40px;
+  
+  .error-message {
+    background: lighten(@error-color, 42%);
+    border: 1px solid lighten(@error-color, 30%);
+    color: darken(@error-color, 20%);
+    padding: 16px;
+    border-radius: @border-radius;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    
+    &::before {
+      content: '⚠️';
+      font-size: 16px;
+    }
   }
 }
 
-.card {
-  padding: 2em;
+// 代码展示区域样式
+.code-section {
+  padding: 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  
+  h3 {
+    margin: 0 0 24px 0;
+    color: @text-color;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .code-container {
+    border: 1px solid @border-color;
+    border-radius: @border-radius;
+    background: @card-background;
+    overflow: hidden;
+    box-shadow: @box-shadow;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    
+    .code-content {
+      padding: 32px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 15px;
+      line-height: 1.7;
+      background: #f8f9fa;
+      border-radius: @border-radius;
+      overflow: auto;
+      flex: 1;
+      
+      // 代码块样式
+      pre {
+        margin: 0;
+        padding: 0;
+        background: transparent !important;
+        
+        code {
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+          line-height: 1.7 !important;
+          font-size: 14px;
+        }
+      }
+    }
+  }
 }
 
-.read-the-docs {
-  color: #888;
+// 响应式设计
+@media (max-width: 768px) {
+  .app-container {
+    padding: 12px;
+  }
+  
+  .app-header {
+    padding: 20px;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .app-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .input-section,
+  .code-section {
+    padding: 24px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: stretch;
+    
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .input-container {
+    textarea {
+      height: 120px;
+      font-size: 14px;
+    }
+  }
+}
+
+// 加载动画
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
 }

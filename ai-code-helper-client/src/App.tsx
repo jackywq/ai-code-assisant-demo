@@ -3,7 +3,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
 import { Code } from "react-markdown/lib/ast-to-react";
-
+import "./App.less";
 function App() {
   const [prompt, setPrompt] = useState<string>(
     "写一个 Vue3 组合式 API 的节流 Hook"
@@ -171,116 +171,78 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "30px" }}>
-        AI 前端代码助手（流式响应 + 下载功能）
-      </h1>
-
-      {/* 输入区域 */}
-      <div style={{ marginBottom: "20px" }}>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="请输入需求描述（如：写一个 React TodoList 组件）"
-          style={{
-            width: "100%",
-            height: "120px",
-            padding: "12px",
-            fontSize: "14px",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            resize: "vertical",
-          }}
-        />
-        <div style={{ marginTop: "10px" }}>
-          <button
-            onClick={fetchAICodeStream}
-            disabled={loading || !prompt.trim()}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: loading ? "#ccc" : "#1890ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: loading ? "not-allowed" : "pointer",
-              marginRight: "10px",
-            }}
-          >
-            {loading ? "生成中..." : "生成代码"}
-          </button>
-          {loading && (
-            <button
-              onClick={cancelStream}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#ff4d4f",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              取消
-            </button>
-          )}
-          {fullCode && (
-            <button
-              onClick={downloadCode}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#67c23a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                marginLeft: "10px",
-              }}
-            >
-              下载代码
-            </button>
-          )}
+    <div className="app-container">
+      <div className="app-content">
+        {/* 头部 */}
+        <div className="app-header">
+          <h1>AI 前端代码助手</h1>
+          <div className="app-subtitle">流式响应 + 智能代码生成 + 下载功能</div>
         </div>
-      </div>
 
-      {/* 错误提示 */}
-      {error && (
-        <div
-          style={{
-            color: "red",
-            marginBottom: "20px",
-            padding: "10px",
-            border: "1px solid #ff4d4f",
-            borderRadius: "4px",
-          }}
-        >
-          ❌ {error}
-        </div>
-      )}
-
-      {/* 流式代码展示 */}
-      {(streamingCode || fullCode) && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>生成结果：</h3>
-          <div
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              padding: "20px",
-              backgroundColor: "#fff",
-              overflow: "hidden",
-              fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-            }}
-          >
-            <ReactMarkdown
-              components={{
-                code: CodeBlock,
-              }}
+        {/* 输入区域 */}
+        <div className="input-section">
+          <div className="input-container">
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="请输入需求描述（如：写一个 React TodoList 组件）"
+              className={loading ? "loading" : ""}
+            />
+          </div>
+          <div className="button-group">
+            <button
+              onClick={fetchAICodeStream}
+              disabled={loading || !prompt.trim()}
+              className="generate-btn"
             >
-              {streamingCode || fullCode}
-            </ReactMarkdown>
+              {loading ? (
+                <>
+                  <span>🔄</span> 生成中...
+                </>
+              ) : (
+                <>
+                  <span>✨</span> 生成代码
+                </>
+              )}
+            </button>
+            {loading && (
+              <button onClick={cancelStream} className="cancel-btn">
+                <span>⏹️</span> 取消
+              </button>
+            )}
+            {fullCode && (
+              <button onClick={downloadCode} className="download-btn">
+                <span>💾</span> 下载代码
+              </button>
+            )}
           </div>
         </div>
-      )}
+
+        {/* 错误提示 */}
+        {error && (
+          <div className="error-section">
+            <div className="error-message">❌ {error}</div>
+          </div>
+        )}
+
+        {/* 流式代码展示 */}
+        {(streamingCode || fullCode) && (
+          <div className="code-section">
+            <h3>🎯 生成结果</h3>
+            <div className="code-container">
+              <div className="code-content">
+                <ReactMarkdown
+                  components={{
+                    code: CodeBlock,
+                  }}
+                >
+                  {streamingCode || fullCode}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
