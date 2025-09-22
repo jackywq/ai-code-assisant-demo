@@ -172,7 +172,7 @@ function App() {
       <div className="app-content">
         {/* 头部 */}
         <div className="app-header">
-          <h1>AI 前端代码助手</h1>
+          <h1>AI 助手</h1>
           <div className="app-subtitle">流式响应 + 智能代码生成 + 下载功能</div>
         </div>
 

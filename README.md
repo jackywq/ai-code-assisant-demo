@@ -1,6 +1,6 @@
-# AI Code Helper
+# AI 助手
 
-一个全栈AI代码助手项目，包含React + TypeScript前端和Node.js后端服务器。
+一个全栈AI助手项目，包含React + TypeScript前端和Node.js后端服务器。
 
 ## 项目结构
 
@@ -23,9 +23,9 @@ ai-code/
 
 ## 功能特性
 
-- 🤖 AI代码辅助功能
+- 🤖 AI助手功能
 - ⚡ 基于Vite的快速开发体验
-- 🔄 实时代码提示和建议
+- 🔄 实时AI响应和建议
 - 🌐 RESTful API接口
 - 🎨 现代化的用户界面
 - 🛡️ 完整的TypeScript类型安全
