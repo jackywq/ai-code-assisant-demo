@@ -4,9 +4,7 @@ import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
 import "./App.less";
 function App() {
-  const [prompt, setPrompt] = useState<string>(
-    "写一个 Vue3 组合式 API 的节流 Hook"
-  );
+  const [prompt, setPrompt] = useState<string>("浅谈前端工程化");
   const [fullCode, setFullCode] = useState<string>("");
   const [streamingCode, setStreamingCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("javascript");

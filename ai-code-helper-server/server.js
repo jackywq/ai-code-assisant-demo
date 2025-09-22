@@ -38,11 +38,11 @@ app.post("/api/ai/code", async (req, res) => {
       body: JSON.stringify({
         model: "deepseek-v3.1", // 确保模型支持非流式响应
         messages: [
-          {
-            role: "system",
-            content:
-              "你是资深前端工程师，仅返回可运行的代码，不添加多余解释。代码需包含注释，遵循 ES6+ 规范。",
-          },
+          //   {
+          //     role: "system",
+          //     content:
+          //       "你是资深前端工程师，仅返回可运行的代码，不添加多余解释。代码需包含注释，遵循 ES6+ 规范。",
+          //   },
           { role: "user", content: prompt },
         ],
         stream: false, // 普通响应：关闭流式传输
@@ -92,11 +92,11 @@ app.post("/api/ai/code/stream", async (req, res) => {
       body: JSON.stringify({
         model: "deepseek-v3.1", // 确保模型支持流式响应
         messages: [
-          {
-            role: "system",
-            content:
-              "你是资深前端工程师，仅返回可运行的代码，不添加多余解释。代码需包含注释，遵循 ES6+ 规范。",
-          },
+          //   {
+          //     role: "system",
+          //     content:
+          //       "你是资深前端工程师，仅返回可运行的代码，不添加多余解释。代码需包含注释，遵循 ES6+ 规范。",
+          //   },
           { role: "user", content: prompt },
         ],
         stream: true, // 开启流式传输
