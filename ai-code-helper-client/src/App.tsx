@@ -7,9 +7,11 @@ function App() {
   const [prompt, setPrompt] = useState<string>("浅谈前端工程化");
   const [fullCode, setFullCode] = useState<string>("");
   const [streamingCode, setStreamingCode] = useState<string>("");
-  const [language, setLanguage] = useState<string>("javascript");
+  // 修改未使用的变量，添加下划线前缀忽略TypeScript警告
+  const [_language, setLanguage] = useState<string>("javascript");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [downloading, setDownloading] = useState<boolean>(false);
   const controllerRef = useRef<AbortController | null>(null);
   const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(
     null
@@ -34,6 +36,53 @@ function App() {
         {String(children).replace(/\n$/, "")}
       </SyntaxHighlighter>
     );
+  };
+
+  // 智能检测代码语言
+  const detectLanguage = (code: string): string => {
+    // 优先检测markdown特征
+    if (
+      code.includes("# ") ||
+      code.includes("## ") ||
+      code.includes("### ") ||
+      code.includes("```") ||
+      (code.includes("[") && code.includes("](") && code.includes(")")) ||
+      code.includes("* ") ||
+      code.includes("- ") ||
+      code.includes("**")
+    ) {
+      return "markdown";
+    }
+    if (code.includes("import React") || code.includes("from 'react'")) {
+      return "tsx";
+    } else if (
+      code.includes("const") &&
+      code.includes("let") &&
+      code.includes("function")
+    ) {
+      return "javascript";
+    } else if (code.includes("def ") && code.includes("import")) {
+      return "python";
+    } else if (code.includes("<template>") && code.includes("<script>")) {
+      return "vue";
+    } else if (code.includes("struct") || code.includes("fn ")) {
+      return "rust";
+    } else if (code.includes("#include") && code.includes("using namespace")) {
+      return "cpp";
+    } else if (code.includes("public static void main")) {
+      return "java";
+    } else if (code.includes("<?php") && code.includes("echo")) {
+      return "php";
+    } else if (code.includes("SELECT ") && code.includes("FROM")) {
+      return "sql";
+    } else if (code.includes("<!DOCTYPE html") || code.includes("<html>")) {
+      return "html";
+    } else if (code.includes("styles") && code.includes("@media")) {
+      return "css";
+    } else if (code.includes("@tailwind") || code.includes("bg-")) {
+      return "css";
+    }
+    return "javascript";
   };
 
   // 流式请求AI接口（使用 fetch）
@@ -79,19 +128,28 @@ function App() {
             // 直接存储原始内容，由ReactMarkdown处理格式化
             setFullCode(accumulatedCode);
             setStreamingCode(accumulatedCode);
+            // 检测代码语言
+            const detectedLanguage = detectLanguage(accumulatedCode);
+            setLanguage(detectedLanguage);
             return;
           }
 
           // 解码并处理数据
           const chunkStr = decoder.decode(value, { stream: true });
-          const lines = chunkStr.split("\n").filter((line) => line.trim());
+
+          // 修复：直接处理接收到的所有数据，不再按行拆分和过滤空行
+          // 后端已经以SSE格式返回数据
+          const lines = chunkStr.split("\n");
 
           for (const line of lines) {
             if (line.startsWith("data: ")) {
               const dataStr = line.slice(6);
               if (dataStr === "[DONE]") {
-                reader.cancel();
-                return;
+                // 修复：当收到[DONE]信号时，不需要取消reader
+                // 而是让流自然结束，这样done才会变为true
+                // reader.cancel();
+                // return;
+                break;
               }
 
               try {
@@ -148,23 +206,72 @@ function App() {
     };
   }, []);
 
+  // 获取文件扩展名
+  const getFileExtension = (lang: string): string => {
+    const extensionMap: Record<string, string> = {
+      javascript: "js",
+      typescript: "ts",
+      tsx: "tsx",
+      jsx: "jsx",
+      python: "py",
+      vue: "vue",
+      rust: "rs",
+      cpp: "cpp",
+      java: "java",
+      php: "php",
+      sql: "sql",
+      html: "html",
+      css: "css",
+      markdown: "md",
+      json: "json",
+      yaml: "yaml",
+    };
+    return extensionMap[lang] || "txt";
+  };
+
   // 下载代码为文件
   const downloadCode = (): void => {
     if (!fullCode) {
       setError("没有可下载的代码");
       return;
     }
-    // 根据语言类型设置文件扩展名
-    const ext = language === "javascript" ? "js" : language;
-    const blob = new Blob([fullCode], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ai-generated-code.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+
+    setDownloading(true);
+
+    try {
+      // 智能检测代码语言
+      const detectedLanguage = detectLanguage(fullCode);
+      setLanguage(detectedLanguage);
+
+      // 根据语言类型设置文件扩展名
+      const ext = getFileExtension(detectedLanguage);
+
+      // 创建Blob对象
+      const blob = new Blob([fullCode], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      // 创建下载链接并触发下载
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ai-generated-code.${ext}`;
+      document.body.appendChild(a);
+
+      // 使用setTimeout确保UI更新后再触发下载
+      setTimeout(() => {
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // 下载成功提示
+        setError("");
+        setTimeout(() => {
+          setDownloading(false);
+        }, 1500);
+      }, 100);
+    } catch (err) {
+      setError(`下载失败: ${(err as Error).message}`);
+      setDownloading(false);
+    }
   };
 
   return (
@@ -208,12 +315,33 @@ function App() {
               </button>
             )}
             {fullCode && (
-              <button onClick={downloadCode} className="download-btn">
-                <span>💾</span> 下载代码
+              <button
+                onClick={downloadCode}
+                disabled={downloading}
+                className="download-btn"
+              >
+                {downloading ? (
+                  <>
+                    <span>⏳</span> 下载中...
+                  </>
+                ) : (
+                  <>
+                    <span>💾</span> 下载代码
+                  </>
+                )}
               </button>
             )}
           </div>
         </div>
+
+        {/* 下载状态提示 */}
+        {downloading && (
+          <div className="download-section">
+            <div className="download-message">
+              <span>📥</span> 正在下载代码文件...
+            </div>
+          </div>
+        )}
 
         {/* 错误提示 */}
         {error && (

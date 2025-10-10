@@ -18,8 +18,8 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,7 +36,7 @@ body {
   bottom: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   overflow: auto;
-  
+
   .app-content {
     min-height: 100vh;
     background: @card-background;
@@ -52,14 +52,14 @@ body {
   padding: 40px;
   text-align: center;
   flex-shrink: 0;
-  
+
   h1 {
     margin: 0;
     font-size: 2.8rem;
     font-weight: 700;
     letter-spacing: -0.5px;
   }
-  
+
   .app-subtitle {
     margin: 12px 0 0 0;
     font-size: 1.3rem;
@@ -74,10 +74,10 @@ body {
   padding: 40px;
   border-bottom: 1px solid @border-color;
   flex-shrink: 0;
-  
+
   .input-container {
     margin-bottom: 32px;
-    
+
     textarea {
       width: 100%;
       height: 160px;
@@ -87,29 +87,29 @@ body {
       border-radius: @border-radius;
       resize: vertical;
       transition: all 0.3s ease;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
       line-height: 1.6;
-      
+
       &:focus {
         outline: none;
         border-color: @primary-color;
         box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
       }
-      
+
       &::placeholder {
         color: @text-color-secondary;
         font-size: 16px;
       }
     }
   }
-  
+
   .button-group {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    
+
     button {
       padding: 16px 32px;
       border: none;
@@ -122,17 +122,17 @@ body {
       align-items: center;
       gap: 10px;
       min-width: 140px;
-      
+
       &.generate-btn {
         background: @primary-color;
         color: white;
-        
+
         &:hover:not(:disabled) {
           background: darken(@primary-color, 15%);
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
         }
-        
+
         &:disabled {
           background: #ccc;
           cursor: not-allowed;
@@ -140,26 +140,33 @@ body {
           box-shadow: none;
         }
       }
-      
+
       &.cancel-btn {
         background: @error-color;
         color: white;
-        
+
         &:hover {
           background: darken(@error-color, 15%);
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(255, 77, 79, 0.3);
         }
       }
-      
+
       &.download-btn {
         background: @success-color;
         color: white;
-        
+
         &:hover {
           background: darken(@success-color, 15%);
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+        }
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
       }
     }
@@ -169,7 +176,7 @@ body {
 // 错误提示样式
 .error-section {
   padding: 0 40px 20px 40px;
-  
+
   .error-message {
     background: lighten(@error-color, 42%);
     border: 1px solid lighten(@error-color, 30%);
@@ -180,9 +187,9 @@ body {
     align-items: center;
     gap: 12px;
     font-size: 14px;
-    
+
     &::before {
-      content: '⚠️';
+      content: "⚠️";
       font-size: 16px;
     }
   }
@@ -195,7 +202,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  
+
   h3 {
     margin: 0 0 24px 0;
     color: @text-color;
@@ -203,7 +210,7 @@ body {
     font-weight: 700;
     text-align: center;
   }
-  
+
   .code-container {
     border: 1px solid @border-color;
     border-radius: @border-radius;
@@ -214,25 +221,25 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 400px;
-    
+
     .code-content {
       padding: 32px;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
       font-size: 15px;
       line-height: 1.7;
       background: #f8f9fa;
       border-radius: @border-radius;
       overflow: auto;
       flex: 1;
-      
+
       // 代码块样式
       pre {
         margin: 0;
         padding: 0;
         background: transparent !important;
-        
+
         code {
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+          font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace !important;
           line-height: 1.7 !important;
           font-size: 14px;
         }
@@ -246,34 +253,34 @@ body {
   .app-container {
     padding: 12px;
   }
-  
+
   .app-header {
     padding: 20px;
-    
+
     h1 {
       font-size: 2rem;
     }
-    
+
     .app-subtitle {
       font-size: 1rem;
     }
   }
-  
+
   .input-section,
   .code-section {
     padding: 24px;
   }
-  
+
   .button-group {
     flex-direction: column;
     align-items: stretch;
-    
+
     button {
       width: 100%;
       justify-content: center;
     }
   }
-  
+
   .input-container {
     textarea {
       height: 120px;
@@ -297,4 +304,24 @@ body {
 
 .loading {
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+// 下载状态提示样式
+.download-section {
+  padding: 0 40px 20px 40px;
+
+  .download-message {
+    background: lighten(@success-color, 42%);
+    border: 1px solid lighten(@success-color, 30%);
+    color: darken(@success-color, 20%);
+    padding: 16px;
+    border-radius: @border-radius;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+
+    // 加载动画
+    animation: pulse 1.5s ease-in-out infinite;
+  }
 }
